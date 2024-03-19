@@ -1,5 +1,3 @@
-%8
-
 i1=1
 i2=0
 i3=1
@@ -9,6 +7,7 @@ w=sqrt(w2)
 k=sqrt(k2)
 m=9
 n=10
+
 
 
 
@@ -117,35 +116,85 @@ title('Y')
 hold off;
 
  %================_____A_____=====================
- 
+h = 0.001
 
-A=[]
-x=[]
- 
- for i = 0: (1/2)/100:1/2
-     x(end+1) = i 
-     y=deval(y_1_L,i)
-     A(end+1) = -y*sin(deval(th_1_L,i))/(v_1(i, w, k, o, t)*sin(deval(th_1_L,i)-deval(fi_1_L,i)))
+
+Y_1_L=[]
+
+for i =  0: h: 1/2
+   Y_1_L(end+1) =  I_2_1_L( i , w, k, o, t,  th_1_L, y_1_L, fi_1_L)
+end
+I_2_1=trapz(Y_1_L)
+
+
+Y_1_R=[]
+
+for i = 1/2: h :1
+   Y_1_R(end+1) = I_2_1_R( i , w, k, o, t,  th_1_R, y_1_R, fi_1_R)
+end
+
+I_2_2=trapz(Y_1_R)
+
+I_2 = I_2_1 + I_2_2
+
+X_2_L=[]
+Y_2_L=[]
+
+for i = 1: (((1+k.^(-2))/2+1)/2)/100:(1+k.^(-2))/2
+   X_2_L(end+1) = i
+   Y_2_L(end+1) =  J_2_2_L( i , w, k, o, t,  th_2_L, y_2_L, fi_2_L)
  end
- 
-  for i = 1/2: (1/2)/100:1
-     x(end+1) = i
-     y=deval(y_1_R,i)
-     A(end+1) = - y*sin(deval(th_1_R,i))/(v_2(i, w, k, o, t)*sin(deval(th_1_R,i)-deval(fi_1_R,i)))
+
+J_2_1=trapz(Y_2_L)
+
+X_2_R=[]
+Y_2_R=[]
+
+ for i = (1+k.^(-2))/2: (((1+k.^(-2))/2+k.^(-2))/2)/100:(k^(-2))
+   X_2_R(end+1) = i
+   Y_2_R(end+1) =  J_2_2_R( i , w, k, o, t,  th_2_R, y_2_R, fi_2_R)
  end
- 
-  for i = 1: (((1+k.^(-2))/2+1)/2)/100:(1+k.^(-2))/2
-     x(end+1) = i 
-     y=deval(y_2_L,i)
-     A(end+1) = -y*sin(deval(th_2_L,i))/(v_3(i, w, k, o, t)*sin(deval(th_2_L,i)-deval(fi_2_L,i)))
- end
- 
-  for i = (1+k.^(-2))/2: (((1+k.^(-2))/2+k.^(-2))/2)/100:(k^(-2))
-     x(end+1) = i
-     y=deval(y_2_R,i)
-     A(end+1) = - y*sin(deval(th_2_R,i))/(v_4(i, w, k, o, t)*sin(deval(th_2_R,i)-deval(fi_2_R,i)))
-  end
- 
+
+J_2_2=trapz(Y_2_R)
+
+J_2 = J_2_1 + J_2_2
+
+C = (J_2-I_2).^(-1/4)
+
+if i2==0
+    a1 = (abs(A_2_L( 1 , w, k, o, t,  th_2_L, y_2_L, fi_2_L)/ A_1_R( 1 , w, k, o, t,  th_1_R, y_1_R, fi_1_R)).^(1/2))*C
+    a2 = ((a1)^(-1))*C^2
+    if A_2_L( 1 , w, k, o, t,  th_2_L, y_2_L, fi_2_L)* A_1_R( 1 , w, k, o, t,  th_1_R, y_1_R, fi_1_R)< 0
+        a2 = -a2
+    end
+else
+    a1 = 1
+    a2 = 1
+end
+
+X_1=[]
+A_1=[]
+
+for i =  0: h: 1/2
+    X_1(end+1) = i
+    A_1(end+1) =  a1 * A_1_L( i , w, k, o, t,  th_1_L, y_1_L, fi_1_L)
+end
+
+for i = 1/2: h :1
+   X_1(end+1) = i
+   A_1(end+1) = a1 * A_1_R( i , w, k, o, t,  th_1_R, y_1_R, fi_1_R)
+end
+
+for i =  1: h: (1+k.^(-2))/2
+    X_1(end+1) = i
+    A_1(end+1) =  a1 * A_2_L( i , w, k, o, t,  th_2_L, y_2_L, fi_2_L)
+end
+
+for i = (1+k.^(-2))/2: h : k^(-2)
+   X_1(end+1) = i
+   A_1(end+1) = a1 * A_2_R( i , w, k, o, t,  th_2_R, y_2_R, fi_2_R)
+end
+
 figure
-plot(x, A)
+plot(X_1, A_1)
 title('A')

@@ -1,5 +1,3 @@
-%8
-
 i1=1
 i2=0
 i3=1
@@ -10,6 +8,10 @@ k=sqrt(k2)
 m=9
 n=10
 
+h = 465.0230
+l = 456.7771
+t = l
+o = h-l
 
 
 if i1==1
@@ -36,50 +38,12 @@ end
 c1=1/2
 c2=(1+k.^(-2))/2
 
-
-% параграф 4
-h = 465.0230
-l =  456.7771
-t = l
-o = h-l
-
-
-
-
-%================_____th_____=====================
-th_1_L=ode45(@(x, th) ODE_th_1_L( x, th, w, k, o, t), [0, 1/2], th0_1)
-th_1_R=ode45(@(x, th) ODE_th_1_R( x, th, w, k, o, t), [1, 1/2], th0_2)
-th_2_L=ode23tb(@(x, th) ODE_th_2_L( x, th, w, k, o, t), [1,(1+k.^(-2))/2], th0_3)
-th_2_R=ode45(@(x, th) ODE_th_2_R( x, th, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], th0_4)
-
-figure
-plot(th_1_L.x,th_1_L.y)
-hold on
-plot(th_1_R.x,th_1_R.y)
-plot(th_2_L.x,th_2_L.y)
-plot(th_2_R.x,th_2_R.y)
-title('th')
-hold off;
-
-
- %================_____fi_0______=====================
-fi0_1=deval(th_1_L,c1)+pi/2
-fi0_2=deval(th_1_R,c1)+pi/2
-fi0_3=deval(th_2_L,c2)+pi/2
-fi0_4=deval(th_2_R,c2)+pi/2
-
- %================_____fi_____=====================
-fi_1_L=ode45(@(x, fi) ODE_fi_1_L( x, fi, w, k, o, t), [1/2, 0], fi0_1)
-fi_1_R=ode45(@(x, fi) ODE_fi_1_R( x, fi, w, k, o, t), [1/2, 1], fi0_1)
-fi_2_L=ode45(@(x, fi) ODE_fi_2_L( x, fi, w, k, o, t), [(1+k.^(-2))/2, 1], fi0_2)
-fi_2_R=ode45(@(x, fi) ODE_fi_2_R( x, fi, w, k, o, t), [(1+k.^(-2))/2, k.^(-2)], fi0_2)
-
-
 %================_____H_____=====================
-H_1_L=ode45(@(x, H) ODE_H_1_L( x, H, w, k, o, t, th_1_L), [0, 1/2], 0)
-H_1_R=ode45(@(x, H) ODE_H_1_R( x, H, w, k, o, t, th_1_R), [1, 1/2], 0)
-H_2_L=ode45(@(x, H) ODE_H_2_L( x, H, w, k, o, t, th_2_L), [1, (1+k.^(-2))/2], 0)
-H_2_R=ode45(@(x, H) ODE_H_2_R( x, H, w, k, o, t, th_2_R), [k.^(-2), (1+k.^(-2))/2], 0)
+H_1_L=ode45(@(x, H) ODE_H_0_1_L( x, H, w, k, o, t), [0, 1/2], [th0_1, 0, 0])
+H_1_R=ode45(@(x, H) ODE_H_0_1_R( x, H, w, k, o, t), [1, 1/2], [th0_2, 0, 0])
+H_2_L=ode45(@(x, H) ODE_H_0_2_L( x, H, w, k, o, t), [1, (1+k.^(-2))/2], [th0_3 ,0, 0])
+H_2_R=ode45(@(x, H) ODE_H_0_2_R( x, H, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], [th0_4, 0, 0])
+
 
 figure
 plot(H_1_L.x,H_1_L.y)
@@ -87,65 +51,99 @@ hold on
 plot(H_1_R.x,H_1_R.y)
 plot(H_2_L.x,H_2_L.y)
 plot(H_2_R.x,H_2_R.y)
-title('H')
+title('H_0')
 hold off;
+
+
+ %================_____fi_0______=====================
+th = deval(H_1_L,c1)
+fi0_1=th(1)+pi/2
+th = deval(H_1_R,c1)
+fi0_2=th(1)+pi/2
+th = deval(H_2_L,c2)
+fi0_3=th(1)+pi/2
+th = deval(H_2_R,c2)
+fi0_4=th(1)+pi/2
 
 
  %================_____y_0____=====================
-H_1_L=deval(H_1_L,c1)
-H_1_R=deval(H_1_R,c1)
-H_2_L=deval(H_2_L,c2)
-H_2_R=deval(H_2_R,c2)
+H_0_1_L = deval(H_1_L,c1)
+H_0_1_R = deval(H_1_R,c1)
+H_0_2_L = deval(H_2_L,c2)
+H_0_2_R = deval(H_2_R,c2)
 
+y_0_1=(H_0_1_L(2)-H_0_1_R(2))^(-1/2)
+y_0_2=(H_0_2_L(2)-H_0_2_R(2))^(-1/2)
 
-%================_____y_____=====================
-y_0_1=(H_1_L-H_1_R).^(-1/2)
-y_0_2=(H_2_L-H_2_R).^(-1/2)
-
-y_1_L=ode45(@(x, y) ODE_y_1_L( x, y, w, k, o, t, fi_1_L), [1/2, 0],  y_0_1)
-y_1_R=ode45(@(x, y) ODE_y_1_R( x, y, w, k, o, t, fi_1_R), [1/2, 1], y_0_1)
-y_2_L=ode45(@(x, y) ODE_y_2_L( x, y, w, k, o, t, fi_2_L), [(1+k.^(-2))/2, 1], y_0_2)
-y_2_R=ode45(@(x, y) ODE_y_2_R( x, y, w, k, o, t, fi_2_R), [(1+k.^(-2))/2, k.^(-2)], y_0_2)
+ %================_____fi_____=====================
+fi_1_L=ode45(@(x, fi) ODE_fi_1_L( x, fi, w, k, o, t), [1/2, 0], [fi0_1, y_0_1])
+fi_1_R=ode45(@(x, fi) ODE_fi_1_R( x, fi, w, k, o, t), [1/2, 1], [fi0_1, y_0_1])
+fi_2_L=ode45(@(x, fi) ODE_fi_2_L( x, fi, w, k, o, t), [(1+k.^(-2))/2, 1], [fi0_2, y_0_2])
+fi_2_R=ode45(@(x, fi) ODE_fi_2_R( x, fi, w, k, o, t), [(1+k.^(-2))/2, k.^(-2)], [fi0_2, y_0_2])
 
 figure
-plot(y_1_L.x,y_1_L.y)
+plot(fi_1_L.x,fi_1_L.y)
 hold on
-plot(y_1_R.x,y_1_R.y)
-plot(y_2_L.x,y_2_L.y)
-plot(y_2_R.x,y_2_R.y)
-title('Y')
+plot(fi_1_R.x,fi_1_R.y)
+plot(fi_2_L.x,fi_2_L.y)
+plot(fi_2_R.x,fi_2_R.y)
+title('fi')
 hold off;
 
- %================_____A_____=====================
- 
 
-A=[]
-x=[]
- 
- for i = 0: (1/2)/100:1/2
-     x(end+1) = i 
-     y=deval(y_1_L,i)
-     A(end+1) = -y*sin(deval(th_1_L,i))/(v_1(i, w, k, o, t)*sin(deval(th_1_L,i)-deval(fi_1_L,i)))
- end
- 
-  for i = 1/2: (1/2)/100:1
-     x(end+1) = i
-     y=deval(y_1_R,i)
-     A(end+1) = - y*sin(deval(th_1_R,i))/(v_2(i, w, k, o, t)*sin(deval(th_1_R,i)-deval(fi_1_R,i)))
- end
- 
-  for i = 1: (((1+k.^(-2))/2+1)/2)/100:(1+k.^(-2))/2
-     x(end+1) = i 
-     y=deval(y_2_L,i)
-     A(end+1) = -y*sin(deval(th_2_L,i))/(v_3(i, w, k, o, t)*sin(deval(th_2_L,i)-deval(fi_2_L,i)))
- end
- 
-  for i = (1+k.^(-2))/2: (((1+k.^(-2))/2+k.^(-2))/2)/100:(k^(-2))
-     x(end+1) = i
-     y=deval(y_2_R,i)
-     A(end+1) = - y*sin(deval(th_2_R,i))/(v_4(i, w, k, o, t)*sin(deval(th_2_R,i)-deval(fi_2_R,i)))
-  end
- 
+ %================_____A_____=====================
+H_1_1_L = deval(H_1_L,c1)
+H_1_1_R = deval(H_1_R,c1)
+H_1_2_L = deval(H_2_L,c2)
+H_1_2_R = deval(H_2_R,c2)
+
+h = 0.001
+I2 = (H_1_1_L(3) - H_1_1_R(3)) / (H_0_1_L(2) - H_0_1_R(2))
+J2 = (H_1_2_L(3) - H_1_2_R(3)) / (H_0_2_L(2) - H_0_2_R(2))
+
+
+%================_____a1, a2_____=====================
+C = (J2-I2)^(-1/4)
+if i2==0
+    a1 = ((abs(A_2_L( 1 , w, k, o, t,  H_2_L, fi_2_L)/ A_1_R( 1 , w, k, o, t,  H_1_R, fi_1_R)))^(1/2))*C
+    a2 = (a1^(-1))*(C^2)
+    if A_2_L( 1 , w, k, o, t,  H_2_L,  fi_2_L)* A_1_R( 1 , w, k, o, t,  H_1_R, fi_1_R) < 0
+        a2 = -a2
+    end
+else
+    a1 = ((abs(diff_A_2_L( 1 , w, k, o, t, H_2_L, fi_2_L) * ((diff_A_1_R( 1, w, k, o, t,  H_1_R, fi_1_R))^(-1))))^(1/2))*C 
+    a2 = (a1^(-1))*(C^2)
+    if A_2_L( 1 , w, k, o, t, H_2_L, fi_2_L)* A_1_R( 1 , w, k, o, t,  H_1_R, fi_1_R)< 0
+        a2 = -a2
+    end
+end
+
+X_1=[]
+A_1=[]
+
+for i =  0: h: 1/2
+    X_1(end+1) = i
+    A_1(end+1) =  a1 * A_1_L( i , w, k, o, t,  H_1_L, fi_1_L)
+end
+
+for i = 1/2: h :1
+   X_1(end+1) = i
+   A_1(end+1) = a1 * A_1_R( i , w, k, o, t,  H_1_R,  fi_1_R)
+end
+
+for i =  1: h: (1+k.^(-2))/2
+    X_1(end+1) = i
+    A_1(end+1) =  a1 * A_2_L( i , w, k, o, t,  H_2_L, fi_2_L)
+end
+
+for i = (1+k.^(-2))/2: h : k^(-2)-h
+   X_1(end+1) = i
+   A_1(end+1) = a1 * A_2_R( i , w, k, o, t,  H_2_R,  fi_2_R)
+end
+
 figure
-plot(x, A)
+plot(X_1, A_1)
+grid on
 title('A')
+
+

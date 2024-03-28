@@ -1,18 +1,19 @@
 % указать самому из своих соображений
-delta_o = 300
-delta_t = 300
-e = 0.00001
+delta_o=300
+delta_t =300
+e =0.00001
 
 %занчения даны
 i1=1
-i2=0
-i3=1
-w2=1
-k2=0.9
+i2=1
+i3=0
+w2=100
+k2=0.5
 w=sqrt(w2)
 k=sqrt(k2)
-m=9
-n=10
+m=8
+n=15
+
 
 
 
@@ -51,11 +52,12 @@ c2=(1+k.^(-2))/2
 l_=t
 h_=o+t
 
+
 %%%%%%
 
 th_1_L=ode45(@(x, th) ODE_th_1_L( x, th, w, k, o, t), [0, 1/2], th0_1)
 th_1_R=ode45(@(x, th) ODE_th_1_R( x, th, w, k, o, t), [1, 1/2], th0_2)
-th_2_L=ode23tb(@(x, th) ODE_th_2_L( x, th, w, k, o, t), [1,(1+k.^(-2))/2], th0_3)
+th_2_L=ode45(@(x, th) ODE_th_2_L( x, th, w, k, o, t), [1,(1+k.^(-2))/2], th0_3)
 th_2_R=ode45(@(x, th) ODE_th_2_R( x, th, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], th0_4)
 
 figure

@@ -1,18 +1,21 @@
-i1=1
-i2=0
-i3=1
-w2=1
-k2=0.9
+i1=0
+i2=1
+i3=0
+w2=500
+k2=0.5
 w=sqrt(w2)
 k=sqrt(k2)
-m=9
-n=10
+m=25
+n=45
 
-h = 465.0230
-l = 456.7771
+h = 4.6506e+03
+l = 4.6937e+03
+
+
 t = l
 o = h-l
 
+options=odeset('AbsTol',1e-06,'RelTol',1e-03,'Refine','8')
 
 if i1==1
     th0_1=0
@@ -39,10 +42,10 @@ c1=1/2
 c2=(1+k.^(-2))/2
 
 %================_____H_____=====================
-H_1_L=ode45(@(x, H) ODE_H_0_1_L( x, H, w, k, o, t), [0, 1/2], [th0_1, 0, 0])
-H_1_R=ode45(@(x, H) ODE_H_0_1_R( x, H, w, k, o, t), [1, 1/2], [th0_2, 0, 0])
-H_2_L=ode45(@(x, H) ODE_H_0_2_L( x, H, w, k, o, t), [1, (1+k.^(-2))/2], [th0_3 ,0, 0])
-H_2_R=ode45(@(x, H) ODE_H_0_2_R( x, H, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], [th0_4, 0, 0])
+H_1_L=ode45(@(x, H) ODE_H_0_1_L( x, H, w, k, o, t), [0, 1/2], [th0_1, 0, 0], options)
+H_1_R=ode45(@(x, H) ODE_H_0_1_R( x, H, w, k, o, t), [1, 1/2], [th0_2, 0, 0], options)
+H_2_L=ode45(@(x, H) ODE_H_0_2_L( x, H, w, k, o, t), [1, (1+k.^(-2))/2], [th0_3 ,0, 0], options)
+H_2_R=ode45(@(x, H) ODE_H_0_2_R( x, H, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], [th0_4, 0, 0], options)
 
 
 figure
@@ -76,10 +79,10 @@ y_0_1=(H_0_1_L(2)-H_0_1_R(2))^(-1/2)
 y_0_2=(H_0_2_L(2)-H_0_2_R(2))^(-1/2)
 
  %================_____fi_____=====================
-fi_1_L=ode45(@(x, fi) ODE_fi_1_L( x, fi, w, k, o, t), [1/2, 0], [fi0_1, y_0_1])
-fi_1_R=ode45(@(x, fi) ODE_fi_1_R( x, fi, w, k, o, t), [1/2, 1], [fi0_1, y_0_1])
-fi_2_L=ode45(@(x, fi) ODE_fi_2_L( x, fi, w, k, o, t), [(1+k.^(-2))/2, 1], [fi0_2, y_0_2])
-fi_2_R=ode45(@(x, fi) ODE_fi_2_R( x, fi, w, k, o, t), [(1+k.^(-2))/2, k.^(-2)], [fi0_2, y_0_2])
+fi_1_L=ode45(@(x, fi) ODE_fi_1_L( x, fi, w, k, o, t), [1/2, 0], [fi0_1, y_0_1], options)
+fi_1_R=ode45(@(x, fi) ODE_fi_1_R( x, fi, w, k, o, t), [1/2, 1], [fi0_1, y_0_1], options)
+fi_2_L=ode45(@(x, fi) ODE_fi_2_L( x, fi, w, k, o, t), [(1+k.^(-2))/2, 1], [fi0_2, y_0_2], options)
+fi_2_R=ode45(@(x, fi) ODE_fi_2_R( x, fi, w, k, o, t), [(1+k.^(-2))/2, k.^(-2)], [fi0_2, y_0_2], options)
 
 figure
 plot(fi_1_L.x,fi_1_L.y)

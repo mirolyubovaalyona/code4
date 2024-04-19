@@ -1,16 +1,15 @@
 i1=0
 i2=1
 i3=0
-w2=500
+w2=100
 k2=0.5
 w=sqrt(w2)
 k=sqrt(k2)
-m=25
-n=45
+m=50
+n=105
 
-h = 4.6506e+03
-l = 4.6937e+03
-
+h = 2.152694192730982e+04
+l = 2.216590475875140e+04
 
 t = l
 o = h-l
@@ -57,6 +56,25 @@ plot(H_2_R.x,H_2_R.y)
 title('H_0')
 hold off;
 
+%======лишнее
+
+th_1_L=ode45(@(x, th) ODE_th_1_L( x, th, w, k, o, t), [0, 1/2], th0_1)
+th_1_R=ode45(@(x, th) ODE_th_1_R( x, th, w, k, o, t), [1, 1/2], th0_2)
+th_2_L=ode45(@(x, th) ODE_th_2_L( x, th, w, k, o, t), [1,(1+k.^(-2))/2], th0_3)
+th_2_R=ode45(@(x, th) ODE_th_2_R( x, th, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], th0_4)
+
+figure
+plot(th_1_L.x,th_1_L.y)
+hold on
+plot(th_1_R.x,th_1_R.y)
+plot(th_2_L.x,th_2_L.y)
+plot(th_2_R.x,th_2_R.y)
+plot(H_1_L(1).x,H_1_L.y)
+plot(H_1_R(1).x,H_1_R.y)
+plot(H_2_L(1).x,H_2_L.y)
+plot(H_2_R(1).x,H_2_R.y)
+title('th')
+hold off;
 
  %================_____fi_0______=====================
 th = deval(H_1_L,c1)

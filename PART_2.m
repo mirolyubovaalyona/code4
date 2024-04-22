@@ -1,16 +1,15 @@
-i1=0
-i2=1
-i3=0
-w2=100
-k2=0.5
+i1=1
+i2=0
+i3=1
+w2=2000
+k2=0.9
 w=sqrt(w2)
 k=sqrt(k2)
-m=50
-n=105
+m=9
+n=10
 
-h = 2.152694192730982e+04
-l = 2.216590475875140e+04
-
+l = 3.3273e+03
+h = 1.4999e+03
 t = l
 o = h-l
 
@@ -154,12 +153,12 @@ end
 
 for i =  1: h: (1+k.^(-2))/2
     X_1(end+1) = i
-    A_1(end+1) =  a1 * A_2_L( i , w, k, o, t,  H_2_L, fi_2_L)
+    A_1(end+1) =  a2 * A_2_L( i , w, k, o, t,  H_2_L, fi_2_L)
 end
 
 for i = (1+k.^(-2))/2: h : k^(-2)-h
    X_1(end+1) = i
-   A_1(end+1) = a1 * A_2_R( i , w, k, o, t,  H_2_R,  fi_2_R)
+   A_1(end+1) = a2 * A_2_R( i , w, k, o, t,  H_2_R,  fi_2_R)
 end
 
 figure

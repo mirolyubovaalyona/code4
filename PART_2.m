@@ -1,19 +1,23 @@
-i1=1
-i2=0
-i3=1
-w2=2000
-k2=0.9
+i1=0
+i2=1
+i3=0
+w2=100
+k2=0.5
 w=sqrt(w2)
 k=sqrt(k2)
-m=9
-n=10
+m=50
+n=105
 
-l = 3.3273e+03
-h = 1.4999e+03
+h = 2.152694192730982e+04
+l = 2.216590475875140e+04
+
+
+
 t = l
 o = h-l
 
-options=odeset('AbsTol',1e-06,'RelTol',1e-03,'Refine','8')
+options=odeset('RelTol' , 1e-8, 'AbsTol' , 1e-10 ,'Refine','8', 'MaxStep',1e-4)
+h = 1e-4
 
 if i1==1
     th0_1=0
@@ -117,7 +121,7 @@ H_1_1_R = deval(H_1_R,c1)
 H_1_2_L = deval(H_2_L,c2)
 H_1_2_R = deval(H_2_R,c2)
 
-h = 0.001
+
 I2 = (H_1_1_L(3) - H_1_1_R(3)) / (H_0_1_L(2) - H_0_1_R(2))
 J2 = (H_1_2_L(3) - H_1_2_R(3)) / (H_0_2_L(2) - H_0_2_R(2))
 

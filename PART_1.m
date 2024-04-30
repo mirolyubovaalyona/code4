@@ -1,16 +1,16 @@
-delta_o=300
-delta_t =300
+delta_o=10000
+delta_t =5000
 e =0.00001
 
 i1=1
 i2=0
-i3=1
-w2=1
-k2=0.9
+i3=0
+w2=1000
+k2=0.5
 w=sqrt(w2)
 k=sqrt(k2)
-m=9
-n=10
+m=100
+n=200
 
 
 

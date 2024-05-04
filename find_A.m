@@ -1,21 +1,6 @@
-function res=find_A()
-    % указать самому из своих соображений
-    options=odeset('RelTol' , 1e-8, 'AbsTol' , 1e-10 ,'Refine','8', 'MaxStep',1e-2)
-    h_A  = 1e-3
-    
-    %занчения даны, их надо указать
-    i1=1
-    i2=0
-    i3=1
-    w2=1
-    k2=0.9
+function res=find_A(h, l, i1, i2,i3,w2, k2, m, n, options, h_A)
     w=sqrt(w2)
     k=sqrt(k2)
-    m=9
-    n=10
-
-    h = 4.650515199778324e+02
-    l = 4.568093238860370e+02
 
     %начало вычислений 
     t = l

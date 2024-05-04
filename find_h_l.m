@@ -1,20 +1,6 @@
-function res=find_h_l()
-    % указать самому из своих соображений
-    delta_o=10000
-    delta_t =5000
-    e =0.00001
-    options=odeset('RelTol' , 1e-7, 'AbsTol' , 1e-10 ,'Refine','8', 'MaxStep',1e-2)
-
-    %занчения даны, их тоже надо указать
-    i1=1
-    i2=0
-    i3=1
-    w2=1
-    k2=0.9
+function [h, l]=find_h_l(i1, i2,i3,w2, k2, m, n, delta_o, delta_t, e, options)
     w=sqrt(w2)
     k=sqrt(k2)
-    m=9
-    n=10
     
     %начало вычислений 
     if i1==1
@@ -50,7 +36,6 @@ function res=find_h_l()
     [o, t]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o, t, c1, c2, w, k,  delta_o, delta_t, e, options)
     l=t
     h=o+t
-    res = [h, l]
 end
 
 %поиск начальных h, l

@@ -1,4 +1,4 @@
-function res=find_A(h, l, i1, i2,i3,w2, k2, m, n, options, h_A)
+function [X_1, A_1, X_2, A_2] = find_A(h, l, i1, i2,i3,w2, k2, m, n, options, h_A)
     w=sqrt(w2)
     k=sqrt(k2)
 
@@ -86,35 +86,43 @@ function res=find_A(h, l, i1, i2,i3,w2, k2, m, n, options, h_A)
     end
 
     %================_____A_____=====================
-    X=[]
-    A=[]
+    X_1=[]
+    A_1=[]
 
-    for i =  0: h_A : 1/2
-        X(end+1) = i
-        A(end+1) =  a1 * A_1_L( i , w, k, o, t,  th_H_1_L, fi_y_1_L)
+    for i =  0: h_A : 1/2 - h_A
+        X_1(end+1) = i
+        A_1(end+1) =  a1 * A_1_L( i , w, k, o, t,  th_H_1_L, fi_y_1_L)
     end
 
-    for i = 1/2: h_A :1
-       X(end+1) = i
-       A(end+1) = a1 * A_1_R( i , w, k, o, t,  th_H_1_R,  fi_y_1_R)
+    for i = 1/2: h_A :1 - h_A
+       X_1(end+1) = i
+       A_1(end+1) = a1 * A_1_R( i , w, k, o, t,  th_H_1_R,  fi_y_1_R)
+    end
+ 
+    X_1(end+1) = 1
+    A_1(end+1) = a1 * A_1_R( 1 , w, k, o, t,  th_H_1_R,  fi_y_1_R)
+        
+    X_2=[]
+    A_2=[]
+    for i =  1: h_A : (1+k.^(-2))/2 - h_A
+        X_2(end+1) = i
+        A_2(end+1) =  a2 * A_2_L( i , w, k, o, t,  th_H_2_L, fi_y_2_L)
     end
 
-    for i =  1: h_A : (1+k.^(-2))/2
-        X(end+1) = i
-        A(end+1) =  a2 * A_2_L( i , w, k, o, t,  th_H_2_L, fi_y_2_L)
-    end
-
-    for i = (1+k.^(-2))/2: h_A : k^(-2)- h_A
-       X(end+1) = i
-       A(end+1) = a2 * A_2_R( i , w, k, o, t,  th_H_2_R,  fi_y_2_R)
+    for i = (1+k.^(-2))/2: h_A : k^(-2) - h_A
+       X_2(end+1) = i
+       A_2(end+1) = a2 * A_2_R( i , w, k, o, t,  th_H_2_R,  fi_y_2_R)
     end
     
+    X_2(end+1) = k^(-2)
+    A_2(end+1) = a2 * A_2_R( k^(-2) , w, k, o, t,  th_H_2_R,  fi_y_2_R)
+     
     figure
-    plot(X, A)
+    plot(X_1, A_1)
+    hold on
+    plot(X_2, A_2)
     grid on
     title('A')
-
-    res = [X, A]
 end
 
 %Функции тета, H0, H1

@@ -1,26 +1,29 @@
-M = magic(5)%занчени€ даны
+%занчени€ даны
 i1=0
-i2=1
+i2=0
 i3=0
 w2=100
 k2=0.5
-w=sqrt(w2)
-k=sqrt(k2)
-
 
 % указать самому из своих соображений
-delta_o=3000
-delta_t =2000
-e = 1e-5
-options_h_l = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'MaxStep',1e-2)
-options_A = odeset('RelTol', 1e-4, 'AbsTol', 1e-5, 'MaxStep',1e-2)
-h_A  = 1e-2
- 
-%начало вычислений амплитуды рассе€ни€
 
+% n, m максимальные
 N_Max = 0
 M_Max = 0
+%шаг сетки
+h_A  = 1e-2
+% начальные шаги поиска пары собственных значений
+delta_o=3000
+delta_t =2000
+%“очность поиска собственных значений
+e = 1e-5
+%точность метода –унге- утты 
+options_h_l = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'MaxStep',1e-2)
+options_A = odeset('RelTol', 1e-4, 'AbsTol', 1e-5, 'MaxStep',1e-2)
 
+%начало вычислений амплитуды рассе€ни€
+w=sqrt(w2)
+k=sqrt(k2)
 n_theta = 1/h_A + 1
 n_fi = int8((k^(-2)-1)/h_A + 1)
 %n_fi=2
@@ -37,4 +40,4 @@ for n = 0 : N_Max
     end
 end
 
-save F.mat
+save Res_Data.mat

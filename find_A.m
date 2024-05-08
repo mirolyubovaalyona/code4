@@ -1,6 +1,4 @@
-function [X_1, A_1, X_2, A_2] = find_A(h, l, i1, i2,i3,w2, k2, m, n, options, h_A)
-    w=sqrt(w2)
-    k=sqrt(k2)
+function [X_1, A_1, X_2, A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, options, h_A)
 
     %начало вычислений 
     t = l

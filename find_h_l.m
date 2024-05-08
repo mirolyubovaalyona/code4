@@ -1,7 +1,5 @@
-function [h, l]=find_h_l(i1, i2,i3,w2, k2, m, n, delta_o, delta_t, e, options)
-    w=sqrt(w2)
-    k=sqrt(k2)
-    
+function [h, l]=find_h_l(i1, i2,i3,w2, k2, w, k, m, n, delta_o, delta_t, e, options)
+
     %начало вычислений 
     if i1==1
         th0_1=0

@@ -36,5 +36,3 @@ for n = 0 : N_Max
         end
     end
 end
-
-save F.mat

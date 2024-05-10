@@ -32,8 +32,9 @@ k=sqrt(k2)
 n_theta = 1/h_A + 1
 n_fi = int8((k^(-2)-1)/h_A + 1)
 %n_fi=2
-term_1 = zeros(n_theta, n_fi)
-term_2 = zeros(n_theta, n_fi)
+F = zeros(n_theta, n_fi)
+term_1
+term
 for n = 0 : N_Max
     for m = 0 : M_Max
         e_1 = exp(i*(-pi*(i1_1+i2_1+(1-i3_1))/2-pi*n))
@@ -52,12 +53,12 @@ for n = 0 : N_Max
         
         for i = 1 : n_theta
             for j = 1 : n_fi
-                term_1 = e_1 * Xi_1_1(i)*Xi_2_1(j) * Psi_1 * w_xi3_1_placeholder * A_xi3_1_placeholder
-                term_2 = e_2 * Xi_1_2(i)*Xi_2_2(j) * Psi_2 * w_xi3_2_placeholder * A_xi3_2_placeholder
+                term_1
+                term_2
+                F(i, j) = F(i,j) + Xi_1_1(i)+Xi_2_1(j) 
             end
         end
     end
 end
 
-F = zeros(n_theta, n_fi)
 save Res_Data.mat

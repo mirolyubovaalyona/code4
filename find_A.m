@@ -114,13 +114,6 @@ function [X_1, A_1, X_2, A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, optio
     
     X_2(end+1) = k^(-2)
     A_2(end+1) = a2 * A_2_R( k^(-2) , w, k, o, t,  th_H_2_R,  fi_y_2_R)
-     
-    figure
-    plot(X_1, A_1)
-    hold on
-    plot(X_2, A_2)
-    grid on
-    title('A')
 end
 
 %Функции тета, H0, H1

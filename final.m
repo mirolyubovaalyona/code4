@@ -54,7 +54,7 @@ for n = 0 : N_Max
         w_xi3_2_placeholder = 7
         Psi_2 = Xi_1_2(n_theta) * Xi_2_2(n_fi)
         
-        for q = 1 : n_theta
+        parfor q = 1 : n_theta
             for j = 1 : n_fi
                 term_1(q, j) =  term_1(q, j) + (e_1 * Xi_1_1(q)*Xi_2_1(j) * Psi_1 * w_xi3_1_placeholder) 
                 term_2(q, j) = term_2(q, j) + (e_2 * Xi_1_2(q)*Xi_2_2(j) * Psi_2 * w_xi3_2_placeholder) 
@@ -64,7 +64,7 @@ for n = 0 : N_Max
 end
 
 F = zeros(n_theta, n_fi)
-for q = 1 : n_theta
+parfor q = 1 : n_theta
     for j = 1 : n_fi
         F(q, j) = abs(16 * pi * i * (term_1(q, j)+term_2(q, j)))
     end
@@ -76,11 +76,11 @@ X_2 = 0:1:double(n_fi)-1
 fi_ = 360/double(n_fi-1)*X_2
 
 theta = zeros(n_theta, n_fi)
-for i = 1:n_fi-1
+parfor i = 1:n_fi-1
     theta(:, i) = theta_
 end
 fi = zeros(n_theta, n_fi)
-for i = 1:n_theta-1
+parfor i = 1:n_theta-1
     fi(i, :) = fi_
 end
 %перевести в декартовыв
@@ -91,8 +91,11 @@ plot3(X,Y,Z)
 save Res_Data.mat
 
 surf(X, Y, Z)
+plot3(X, Y, Z)
 
 
+%встроеный переводчик в дкартовы от матлаба, переводит по другому
 %[x,y,z] = sph2cart(theta,fi,F)
+%surf(x,y,z)
 %plot3(x,y,z)
 

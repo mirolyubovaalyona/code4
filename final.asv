@@ -18,12 +18,12 @@ M_Max = 2
 %шаг сетки
 h_A  = 1e-2
 % начальные шаги поиска пары собственных значений
-delta_o= 10000000
-delta_t = 10000000
+delta_o= 100000
+delta_t = 100000
 %“очность поиска собственных значений
 e = 1e-5
 %точность метода –унге- утты 
-options_h_l = odeset('RelTol', 1e-7, 'AbsTol', 1e-9, 'MaxStep',1e-3)
+options_h_l = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'MaxStep',1e-2)
 options_A = odeset('RelTol', 1e-4, 'AbsTol', 1e-5, 'MaxStep',1e-2)
 
 %начало вычислений амплитуды рассе€ни€
@@ -38,7 +38,12 @@ term_2 = zeros(n_theta, n_fi)
 for n = 0 : N_Max
     e_1 = exp(2*i*(-pi*(i1_1+i2_1+(1-i3_1))/2-pi*n))
     e_2 = exp(2*i*(-pi*(i1_2+i2_2+(1-i3_2))/2-pi*n))
-    for m = 0 : n
+    if ( n > M_Max)
+        M_N =  M_Max
+    else 
+        M_N = n
+    end
+    for m = 0 : M_N
         [h_1, l_1] = find_h_l(i1_1, i2_1, i3_1, w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l)
         [X_theta_1, Xi_1_1, X_fi_1, Xi_2_1] = find_A(h_1, l_1, i1_1, i2_1, i3_1, w2, k2, w, k,  m, n, options_A, h_A)
         w_xi3_1_placeholder = 7
@@ -49,8 +54,8 @@ for n = 0 : N_Max
         w_xi3_2_placeholder = 7
         Psi_2 = Xi_1_2(n_theta) * Xi_2_2(n_fi)
         
-        for q = 1 : n_theta
-            for j = 1 : n_fi
+        parfor q = 1 : n_theta
+            parfor j = 1 : n_fi
                 term_1(q, j) =  term_1(q, j) + (e_1 * Xi_1_1(q)*Xi_2_1(j) * Psi_1 * w_xi3_1_placeholder) 
                 term_2(q, j) = term_2(q, j) + (e_2 * Xi_1_2(q)*Xi_2_2(j) * Psi_2 * w_xi3_2_placeholder) 
             end
@@ -60,7 +65,7 @@ end
 
 F = zeros(n_theta, n_fi)
 for q = 1 : n_theta
-    for j = 1 : n_fi
+    parfor j = 1 : n_fi
         F(q, j) = abs(16 * pi * i * (term_1(q, j)+term_2(q, j)))
     end
 end
@@ -86,8 +91,11 @@ plot3(X,Y,Z)
 save Res_Data.mat
 
 surf(X, Y, Z)
+plot3(X, Y, Z)
 
 
+%встроеный переводчик в дкартовы от матлаба, переводит по другому
 %[x,y,z] = sph2cart(theta,fi,F)
+%surf(x,y,z)
 %plot3(x,y,z)
 

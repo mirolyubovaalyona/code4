@@ -7,14 +7,18 @@ i1_2=1
 i2_2=0
 i3_2=0
 
-w2=100
-k2=0.5
+w2=10
+k2=0.01
 
 % указать самому из своих соображений
 
 % n, m максимальные
-N_Max = 15
-M_Max = 15
+N_Max = 6
+M_Max = 6
+
+%количество вызовов сумм
+%size = sum(min((0:N_Max)', M_Max) + 1)
+
 %шаг сетки
 h_A  = 1e-3
 % начальные шаги поиска пары собственных значений
@@ -29,11 +33,24 @@ options_A = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'MaxStep',1e-2)
 %начало вычислений амплитуды рассеяния
 w=sqrt(w2)
 k=sqrt(k2)
- 
+
+size = 0
+for n = 0 : N_Max
+     if ( n > M_Max)
+            M_N =  M_Max
+     else 
+            M_N = n
+    end
+    for m = 0 : M_N
+        size = size +1
+    end
+end
 n_theta = 1/h_A + 1
 n_fi = int32((k^(-2)-1)/h_A + 1)
 term_1 = zeros(n_theta, n_fi)
 term_2 = zeros(n_theta, n_fi)   
+
+
 
 for n = 0 : N_Max
     e_1 = exp(2*i*(-pi*(i1_1+i2_1+(1-i3_1))/2-pi*n))
@@ -87,11 +104,12 @@ end
 X = F .* sin(theta) .* cos(fi)
 Y = F .* sin(theta) .* sin(fi)
 Z = F .* cos(theta)
-plot3(X,Y,Z)
-save Res_Data.mat
+
+
+save Res_Data_0.mat
 
 surf(X, Y, Z)
-plot3(X, Y, Z)
+%plot3(X, Y, Z)
 
 
 %встроеный переводчик в дкартовы от матлаба, переводит по другому

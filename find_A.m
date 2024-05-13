@@ -91,30 +91,16 @@ function [A_1,  A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, options, h_A)
     X_2_left = 1:h_A:(1+k^(-2))/2 - h_A;
     X_2_right = (1+k^(-2))/2:h_A:k^(-2);
 
-    A_1_left = zeros(1,length(X_1_left))
-    A_1_right = zeros(1, length(X_1_right))
+    
+    A_1_left = arrayfun(@(i) a1 * A_1_L(X_1_left(i), w, k, o, t, th_H_1_L, fi_y_1_L), 1:length(X_1_left));
+    A_1_right = arrayfun(@(i) a1 * A_1_R(X_1_right(i), w, k, o, t, th_H_1_R, fi_y_1_R), 1:length(X_1_right));
+    A_2_left = arrayfun(@(i) a2 * A_2_L(X_2_left(i), w, k, o, t, th_H_2_L, fi_y_2_L), 1:length(X_2_left));
+    A_2_right = arrayfun(@(i) a2 * A_2_R(X_2_right(i), w, k, o, t, th_H_2_R, fi_y_2_R), 1:length(X_2_right));
 
-    A_2_left = zeros(1, length(X_2_left))
-    A_2_right = zeros(1, length(X_2_right))
-
-    parfor i =  1: length(X_1_left)
-        A_1_left(i) = a1 * A_1_L(X_1_left(i), w, k, o, t, th_H_1_L, fi_y_1_L)
-    end
-   
-    parfor i =  1: length(X_1_right)
-        A_1_right(i) = a1 * A_1_R(X_1_right(i), w, k, o, t, th_H_1_R, fi_y_1_R)
-    end
-
-    parfor i =  1: length(X_2_left)
-         A_2_left(i) = a2 * A_2_L(X_2_left(i), w, k, o, t, th_H_2_L, fi_y_2_L),
-    end
-
-    parfor i =  1: length(X_2_right)
-         A_2_right(i) =  a2 * A_2_R(X_2_right(i), w, k, o, t, th_H_2_R, fi_y_2_R)
-    end
 
     A_1 = [A_1_left, A_1_right]
     A_2 = [A_2_left, A_2_right]
+    
     %figure
     %plot([0: h_A : 1], A_1)
     %hold on

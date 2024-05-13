@@ -7,8 +7,8 @@ i1_2=1
 i2_2=0
 i3_2=0
 
-w2=10
-k2=0.01
+w2=100
+k2=0.5
 
 % указать самому из своих соображений
 
@@ -27,8 +27,8 @@ delta_t = 100000
 %Точность поиска собственных значений
 e = 1e-5
 %точность метода Рунге-Кутты 
-options_h_l = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, )
-options_A = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'MaxStep',1e-2)
+options_h_l = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'Refine', 10)
+options_A = odeset('RelTol', 1e-5, 'AbsTol', 1e-7, 'Refine', 10)
 
 %начало вычислений амплитуды рассеяния
 w=sqrt(w2)
@@ -39,7 +39,7 @@ n_fi = int32((k^(-2)-1)/h_A + 1)
 term_1 = zeros(n_theta, n_fi)
 term_2 = zeros(n_theta, n_fi)   
 
-parfor n = 0:N_Max
+for n = 0:N_Max
     e_1 = exp(2i*(-pi*(i1_1 + i2_1 + (1 - i3_1))/2 - pi*n));
     e_2 = exp(2i*(-pi*(i1_2 + i2_2 + (1 - i3_2))/2 - pi*n));
     

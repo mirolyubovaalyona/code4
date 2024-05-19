@@ -7,7 +7,7 @@ i1_2=1
 i2_2=0
 i3_2=0
 
-w2=10
+w2=100
 k2=0.01
 
 % указать самому из своих соображений
@@ -40,14 +40,15 @@ term_1 = zeros(n_theta, n_fi)
 term_2 = zeros(n_theta, n_fi)   
 
 for n = 0:N_Max
-    e_1 = exp(2*i*(-pi*(i1_1 + i2_1 + (1 - i3_1))/2 - pi*n));
-    e_2 = exp(2*i*(-pi*(i1_2 + i2_2 + (1 - i3_2))/2 - pi*n));
+    e_1 = exp(2i*(-pi*(i1_1 + i2_1 + (1 - i3_1))/2 - pi*n));
+    e_2 = exp(2i*(-pi*(i1_2 + i2_2 + (1 - i3_2))/2 - pi*n));
     
     M_N = min(n, M_Max);
     
     for m = 0:M_N
         [h_1, l_1] = find_h_l(i1_1, i2_1, i3_1, w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l);
-        [Xi_1_  * Xi_2_1(n_fi);
+        [Xi_1_1, Xi_2_1] = find_A(h_1, l_1, i1_1, i2_1, i3_1, w2, k2, w, k, m, n, options_A, h_A);
+        Psi_1 = Xi_1_1(n_theta) * Xi_2_1(n_fi);
         
         [h_2, l_2] = find_h_l(i1_1, i2_1, i3_1, w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l);
         [Xi_1_2, Xi_2_2] = find_A(h_2, l_2, i1_2, i2_2, i3_2, w2, k2, w, k, m, n, options_A, h_A);
@@ -83,7 +84,7 @@ Y = F .* sin(theta) .* sin(fi)
 Z = F .* cos(theta)
 
 
-save Res_Data_1.mat
+save Res_Data.mat
 
 surf(X, Y, Z)
 %plot3(X, Y, Z)

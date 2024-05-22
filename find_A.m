@@ -1,4 +1,4 @@
-function [A_1,  A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, options, h_A)
+function [A_1,  A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, options, h_A_1, h_A_2)
 
     %начало вычислений 
     t = l
@@ -28,41 +28,58 @@ function [A_1,  A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, options, h_A)
     c2=(1+k.^(-2))/2
     
     %================_____th_H_____=====================
-    th_H_1_L=ode45(@(x, H) ODE_th_H_1_L( x, H, w, k, o, t), [0, 1/2], [th0_1, 0, 0], options)
-    th_H_1_R=ode45(@(x, H) ODE_th_H_1_R( x, H, w, k, o, t), [1, 1/2], [th0_2, 0, 0], options)
-    th_H_2_L=ode45(@(x, H) ODE_th_H_2_L( x, H, w, k, o, t), [1, (1+k.^(-2))/2], [th0_3 ,0, 0], options)
-    th_H_2_R=ode45(@(x, H) ODE_th_H_2_R( x, H, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], [th0_4, 0, 0], options)
+    th_H = cell(4, 1);
+    
+    parfor i = 1:4
+        if i == 1
+            th_H{i} = ode45(@(x, H) ODE_th_H_1_L(x, H, w, k, o, t), [0, 1/2], [th0_1, 0, 0], options);
+        elseif i == 2
+            th_H{i} = ode45(@(x, H) ODE_th_H_1_R(x, H, w, k, o, t), [1, 1/2], [th0_2, 0, 0], options);
+        elseif i == 3
+            th_H{i} = ode45(@(x, H) ODE_th_H_2_L(x, H, w, k, o, t), [1, (1+k.^(-2))/2], [th0_3, 0, 0], options);
+        elseif i == 4
+            th_H{i} = ode45(@(x, H) ODE_th_H_2_R(x, H, w, k, o, t), [k.^(-2), (1+k.^(-2))/2], [th0_4, 0, 0], options);
+        end
+    end
 
      %================_____fi_0______=====================
-    th = deval(th_H_1_L, c1)
+    th = deval(th_H{1}, c1)
     fi0_1=th(1)+pi/2
-    th = deval(th_H_1_R, c1)
+    th = deval(th_H{2}, c1)
     fi0_2=th(1)+pi/2
-    th = deval(th_H_2_L, c2)
+    th = deval(th_H{3}, c2)
     fi0_3=th(1)+pi/2
-    th = deval(th_H_2_R, c2)
+    th = deval(th_H{4}, c2)
     fi0_4=th(1)+pi/2
 
-     %================_____y_0____=====================
-    H_0_1_L = deval(th_H_1_L, c1)
-    H_0_1_R = deval(th_H_1_R, c1)
-    H_0_2_L = deval(th_H_2_L, c2)
-    H_0_2_R = deval(th_H_2_R, c2)
+    %================_____y_0____=====================
+    H_0_1_L = deval(th_H{1}, c1)
+    H_0_1_R = deval(th_H{2}, c1)
+    H_0_2_L = deval(th_H{3}, c2)
+    H_0_2_R = deval(th_H{4}, c2)
 
     y_0_1=(H_0_1_L(2)-H_0_1_R(2))^(-1/2)
     y_0_2=(H_0_2_L(2)-H_0_2_R(2))^(-1/2)
 
-     %================_____fi_y_____=====================
-    fi_y_1_L=ode45(@(x, fi) ODE_fi_y_1_L( x, fi, w, k, o, t), [1/2, 0], [fi0_1, y_0_1], options)
-    fi_y_1_R=ode45(@(x, fi) ODE_fi_y_1_R( x, fi, w, k, o, t), [1/2, 1], [fi0_1, y_0_1], options)
-    fi_y_2_L=ode45(@(x, fi) ODE_fi_y_2_L( x, fi, w, k, o, t), [(1+k.^(-2))/2, 1], [fi0_2, y_0_2], options)
-    fi_y_2_R=ode45(@(x, fi) ODE_fi_y_2_R( x, fi, w, k, o, t), [(1+k.^(-2))/2, k.^(-2)], [fi0_2, y_0_2], options)
+    %================_____fi_y_____=====================
+    fi_y = cell(4, 1);
+    parfor i = 1:4
+        if i == 1
+            fi_y{i} = ode45(@(x, fi) ODE_fi_y_1_L(x, fi, w, k, o, t), [1/2, 0], [fi0_1, y_0_1], options);
+        elseif i == 2
+            fi_y{i} = ode45(@(x, fi) ODE_fi_y_1_R(x, fi, w, k, o, t), [1/2, 1], [fi0_1, y_0_1], options);
+        elseif i == 3
+            fi_y{i} = ode45(@(x, fi) ODE_fi_y_2_L(x, fi, w, k, o, t), [(1+k.^(-2))/2, 1], [fi0_2, y_0_2], options);
+        elseif i == 4
+            fi_y{i} = ode45(@(x, fi) ODE_fi_y_2_R(x, fi, w, k, o, t), [(1+k.^(-2))/2, k.^(-2)], [fi0_2, y_0_2], options);
+        end
+    end
 
    %================_____a1, a2_____=====================
-    H_1_1_L = deval(th_H_1_L,c1)
-    H_1_1_R = deval(th_H_1_R,c1)
-    H_1_2_L = deval(th_H_2_L,c2)
-    H_1_2_R = deval(th_H_2_R,c2)
+    H_1_1_L = deval(th_H{1},c1)
+    H_1_1_R = deval(th_H{2},c1)
+    H_1_2_L = deval(th_H{3},c2)
+    H_1_2_R = deval(th_H{4},c2)
 
     I2 = (H_1_1_L(3) - H_1_1_R(3)) / (H_0_1_L(2) - H_0_1_R(2))
     J2 = (H_1_2_L(3) - H_1_2_R(3)) / (H_0_2_L(2) - H_0_2_R(2))
@@ -70,43 +87,52 @@ function [A_1,  A_2] = find_A(h, l, i1, i2,i3,w2, k2, w, k, m, n, options, h_A)
     C = (J2-I2)^(-1/4)
     
     if i2==0
-    a1 = ((abs(A_2_L( 1 , w, k, o, t,  th_H_2_L, fi_y_2_L)/ A_1_R( 1 , w, k, o, t,  th_H_1_R, fi_y_1_R)))^(1/2))*C
+    a1 = ((abs(A_2_L( 1 , w, k, o, t,  th_H{3}, fi_y{3})/ A_1_R( 1 , w, k, o, t,  th_H{2}, fi_y{2})))^(1/2))*C
     a2 = (a1^(-1))*(C^2)
-    if A_2_L( 1 , w, k, o, t,  th_H_2_L,  fi_y_2_L)* A_1_R( 1 , w, k, o, t,  th_H_1_R, fi_y_1_R) < 0
+    if A_2_L( 1 , w, k, o, t,  th_H{3},  fi_y{3})* A_1_R( 1 , w, k, o, t,  th_H{2}, fi_y{2}) < 0
         a2 = -a2
     end
     else
-        a1 = ((abs(diff_A_2_L( 1 , w, k, o, t, th_H_2_L, fi_y_2_L) * ((diff_A_1_R( 1, w, k, o, t,  th_H_1_R, fi_y_1_R))^(-1))))^(1/2))*C 
+        a1 = ((abs(diff_A_2_L( 1 , w, k, o, t, th_H{3}, fi_y{3}) * ((diff_A_1_R( 1, w, k, o, t,  th_H{2}, fi_y{2}))^(-1))))^(1/2))*C 
         a2 = (a1^(-1))*(C^2)
-        if A_2_L( 1 , w, k, o, t, th_H_2_L, fi_y_2_L)* A_1_R( 1 , w, k, o, t,  th_H_1_R, fi_y_1_R)< 0
+        if A_2_L( 1 , w, k, o, t, th_H{3}, fi_y{3})* A_1_R( 1 , w, k, o, t,  th_H{2}, fi_y{2})< 0
             a2 = -a2
         end
     end
 
     %================_____A_____=====================
-   
-    
-    X_1_left = 0:h_A:1/2 - h_A;
-    X_1_right = 1/2:h_A:1;
-    X_2_left = 1:h_A:(1+k^(-2))/2 - h_A;
-    X_2_right = (1+k^(-2))/2:h_A:k^(-2);
+    X_1_left = 0:h_A_1:1/2 - h_A_1;
+    X_1_right = 1/2:h_A_1:1;
+    X_2_left = 1:h_A_2:(1+k^(-2))/2 - h_A_2;
+    X_2_right = (1+k^(-2))/2:h_A_2:k^(-2);
 
+    A_1_left = cell(1, 1);
+    A_1_right = cell(1, 1);
+    A_2_left = cell(1, 1);
+    A_2_right = cell(1, 1);
     
-    A_1_left = arrayfun(@(i) a1 * A_1_L(X_1_left(i), w, k, o, t, th_H_1_L, fi_y_1_L), 1:length(X_1_left));
-    A_1_right = arrayfun(@(i) a1 * A_1_R(X_1_right(i), w, k, o, t, th_H_1_R, fi_y_1_R), 1:length(X_1_right));
-    A_2_left = arrayfun(@(i) a2 * A_2_L(X_2_left(i), w, k, o, t, th_H_2_L, fi_y_2_L), 1:length(X_2_left));
-    A_2_right = arrayfun(@(i) a2 * A_2_R(X_2_right(i), w, k, o, t, th_H_2_R, fi_y_2_R), 1:length(X_2_right));
+    parfor i = 1:4
+        if i == 1
+            A_1_left{i} = arrayfun(@(i) a1 * A_1_L(X_1_left(i), w, k, o, t, th_H{1}, fi_y{1}), 1:length(X_1_left));
+        elseif i == 2
+            A_1_right{i} = arrayfun(@(i) a1 * A_1_R(X_1_right(i), w, k, o, t, th_H{2}, fi_y{2}), 1:length(X_1_right));
+        elseif i == 3
+            A_2_left{i} = arrayfun(@(i) a2 * A_2_L(X_2_left(i), w, k, o, t, th_H{3}, fi_y{3}), 1:length(X_2_left));
+        elseif i == 4
+            A_2_right{i} = arrayfun(@(i) a2 * A_2_R(X_2_right(i), w, k, o, t, th_H{4}, fi_y{4}), 1:length(X_2_right));
+       end
+    end
 
+    % Объединение результатов
+    A_1 = [cat(2, A_1_left{:}), cat(2, A_1_right{:})];
+    A_2 = [cat(2, A_2_left{:}), cat(2, A_2_right{:})];
 
-    A_1 = [A_1_left, A_1_right]
-    A_2 = [A_2_left, A_2_right]
-    
-    %figure
-    %plot([0: h_A : 1], A_1)
-    %hold on
-     %plot([X_2_left, X_2_right], A_2)
-    %grid on
-    %title('A')
+    figure
+    plot([0: h_A_1 : 1], A_1)
+    hold on
+    plot([X_2_left, X_2_right], A_2)
+    grid on
+    title('A')
 end
 
 %Функции тета, H0, H1

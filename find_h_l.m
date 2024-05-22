@@ -1,46 +1,49 @@
 function [h, l]=find_h_l(i1, i2,i3,w2, k2, w, k, m, n, delta_o, delta_t, e, options)
 
-    %начало вычислений 
-    if i1==1
-        th0_1=0
-    else
-        th0_1=pi/2
-    end
+if i1==1
+    th0_1=0;
+else
+    th0_1=pi/2;
+end 
 
-    if i2==1
-        th0_2= pi+m*pi
-        th0_3=0
-    else
-        th0_2= pi/2+m*pi
-        th0_3= pi/2
-    end
-
-    if i3==1
-        th0_4=pi+(n-m)*pi
-    else
-        th0_4=pi/2+(n-m)*pi
-    end
-
-
-    c1=1/2
-    c2=(1+k.^(-2))/2
-    
-    %поиск начальных h, l
-    [h, l] = initial_h_l(n, m, i1, i2, i3, w, k)
-    t=l
-    o=h-l
-    
-    %поиск собственных зачений в тета
-    [o, t]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o, t, c1, c2, w, k,  delta_o, delta_t, e, options)
-    l=t
-    h=o+t
+if i2==1
+    th0_2= pi+m*pi;
+    th0_3=0;
+else
+    th0_2= pi/2+m*pi;
+    th0_3= pi/2;
 end
 
-%поиск начальных h, l
+if i3==1
+    th0_4=pi+(n-m)*pi;
+else
+    th0_4=pi/2+(n-m)*pi;
+end
+
+
+c1=1/2
+c2=(1+k.^(-2))/2
+
+[h, l]=initial_h_l(n, m, i1, i2, i3, w, k)
+
+t=l
+o=h-l
+
+
+
+
+[o, t]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o, t, c1, c2, w, k,  delta_o, delta_t, e,  options)
+
+l=t
+h=o+t
+
+end
+
+
 function [h, l]=initial_h_l(n, m, i1, i2, i3, w, k)
     if w<=n
         if [i1, i2, i3]==[0, 0, 0]
-            l=(k.^2)*2*n(2*n+1)
+            l=(k.^2)*2*n*(2*n+1)
         end
         if [i1, i2, i3]==[1, 0, 0] | [i1, i2, i3]==[0, 1, 0] | [i1, i2, i3]==[0, 0, 1]
             l=(k.^2)*(2*n+1)*(2*n+2)
@@ -80,23 +83,24 @@ function [h, l]=initial_h_l(n, m, i1, i2, i3, w, k)
     end
 end
 
-%поиск собственных зачений в тета
 function [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  delta_o, delta_t, e, options)
-    th_1_L = ode45(@(x, th) ODE_th_1_L(x, th, w, k, o1, t1), [0, 1/2], th0_1, options);
-    th_1_R = ode45(@(x, th) ODE_th_1_R(x, th, w, k, o1, t1), [1, 1/2], th0_2, options);
-    th_2_L = ode45(@(x, th) ODE_th_2_L(x, th, w, k, o1, t1), [1, (1 + (k.^(-2)))/2], th0_3, options);
-    th_2_R = ode45(@(x, th) ODE_th_2_R(x, th, w, k, o1, t1), [k.^(-2), (1 + (k.^(-2)))/2], th0_4, options);
+    th_1_L=ode45(@(x, th) ODE_th_1_L( x, th, w, k, o1, t1), [0, 1/2], th0_1,  options)
+    th_1_R=ode45(@(x, th) ODE_th_1_R(  x, th, w, k, o1, t1), [1,1/2], th0_2, options)
+    th_2_L=ode45(@(x, th) ODE_th_2_L(  x, th, w, k, o1, t1), [1, (1+(k.^(-2)))/2],th0_3,  options)
+    th_2_R=ode45(@(x, th) ODE_th_2_R( x, th, w, k, o1, t1), [k.^(-2),(1+(k.^(-2)))/2], th0_4, options)
 
-    th_1_L = deval(th_1_L, c1);
-    th_1_R = deval(th_1_R, c1);
-    th_2_L = deval(th_2_L, c2);
-    th_2_R = deval(th_2_R, c2);
+    th_1_L=deval(th_1_L,c1)
+    th_1_R=deval(th_1_R,c1)
+    th_2_L=deval(th_2_L,c2)
+    th_2_R=deval(th_2_R,c2)
     
     %1
     if (th_1_L-th_1_R)>=0 & (th_2_L-th_2_R)>=0
         delta_t=delta_t/2
         t1=t1-delta_t
         if (delta_o<=e) & (delta_t<=e)
+            o1=o1
+            t1=t1
             return
         else
             [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  delta_o, delta_t, e, options)
@@ -108,6 +112,8 @@ function [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  de
         delta_o=delta_o/2
         o1=o1+delta_o
         if (delta_o<=e) & (delta_t<=e)
+            o1=o1
+            t1=t1
             return
         else
             [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  delta_o, delta_t, e, options)
@@ -119,6 +125,8 @@ function [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  de
         delta_t=delta_t/2
         t1=t1+delta_t
         if (delta_o<=e) & (delta_t<=e)
+            o1=o1
+            t1=t1
             return
         else
             [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  delta_o, delta_t, e, options)
@@ -130,14 +138,18 @@ function [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  de
         delta_o=delta_o/2
         o1=o1-delta_o
         if (delta_o<=e) & (delta_t<=e)
+            o1=o1
+            t1=t1
             return
         else
             [o1, t1]=find_o_t(th0_1, th0_2, th0_3, th0_4 ,o1, t1, c1, c2, w, k,  delta_o, delta_t, e, options)
         end
     end
+  
+
+
 end
 
-%Функция тета
 function ode_th =ODE_th_1_L( x, th, w, k, o, t)
     v2 =exp(-4/abs(4*w^2*x^4 + o/k^2 - (t*(2*x^2 - 1))/k^2))*((abs(4*w^2*x^4 + o/k^2 - (t*(2*x^2 - 1))/k^2)/4)^(1/2) - 1) + 1
     v =(exp(-4/abs(4*w^2*x^4 + o/k^2 - (t*(2*x^2 - 1))/k^2))*((abs(4*w^2*x^4 + o/k^2 - (t*(2*x^2 - 1))/k^2)/4)^(1/2) - 1) + 1)^(1/2)
@@ -173,4 +185,3 @@ function ode_th =ODE_th_2_R( x, th, w, k, o, t)
     diff_v =((sign(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2)*exp(-4/abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2))*((2*t*(2*x - 2/k^2))/(k^2*(1/k^2 - 1)) + (4*w^2*(2*x - 2/k^2)*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2))/(1/k^2 - 1)))/(8*(abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2)/4)^(1/2)) + (4*sign(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2)*exp(-4/abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2))*((abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2)/4)^(1/2) - 1)*((2*t*(2*x - 2/k^2))/(k^2*(1/k^2 - 1)) + (4*w^2*(2*x - 2/k^2)*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2))/(1/k^2 - 1)))/abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2)^2)/(2*(exp(-4/abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2))*((abs(w^2*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2)^2 + o/k^2 + (t*((2*(x - 1/k^2)^2)/(1/k^2 - 1) - 1/k^2 + 1))/k^2)/4)^(1/2) - 1) + 1)^(1/2))
     ode_th=(v2/((-f)^(1/2)))*((cos(th))^2)-(q/(4*v2*((-f)^(1/2))))*((sin(th))^2)+(diff_v/v)*(sin(2*th))
 end
-

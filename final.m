@@ -87,6 +87,7 @@ parfor q = 1 : n_theta
     end
 end
  
+
 X_1 = 0:1:n_theta-1;
 theta_ = (pi/2/(n_theta-1)*X_1);
 X_2 = 0:1:double(n_fi)-1;
@@ -96,9 +97,9 @@ theta = repmat(theta_', 1, n_fi);
 fi = repmat(fi_, n_theta, 1);
 
 %перевести в декартовы
-X = F .* cos(theta) .* cos(fi);
-Y = F .* cos(theta) .* sin(fi);
-Z = F .* sin(theta);
+X = F .* sin(theta) .* cos(fi);
+Y = F .* sin(theta) .* sin(fi);
+Z = F .* cos(theta);
 
 
 %save Res_Data_12.mat

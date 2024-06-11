@@ -11,36 +11,36 @@ w2=10;
 ro2=1.1;
 k2=1/ro2;
 
-thickness =  0.1; %Толщина эллипса (xi_3 = sqr_ro + thickness) 
-ellipsoid_condition = 0; %0 - жёсткий |1 - мягкий 
+thickness =  0.1; %РўРѕР»С‰РёРЅР° СЌР»Р»РёРїСЃР° (xi_3 = sqr_ro + thickness) 
+ellipsoid_condition = 0; %0 - Р¶С‘СЃС‚РєРёР№ |1 - РјСЏРіРєРёР№ 
 
-%================указать самому из своих соображений================================
-% n, m максимальные
+%================СѓРєР°Р·Р°С‚СЊ СЃР°РјРѕРјСѓ РёР· СЃРІРѕРёС… СЃРѕРѕР±СЂР°Р¶РµРЅРёР№================================
+% n, m РјР°РєСЃРёРјР°Р»СЊРЅС‹Рµ
 N_Max = 10;
 M_Max = 10;
-n_A = 100; %кол-во шагов сетки  
+n_A = 100; %РєРѕР»-РІРѕ С€Р°РіРѕРІ СЃРµС‚РєРё  
 
-% начальные шаги поиска пары собственных значений
+% РЅР°С‡Р°Р»СЊРЅС‹Рµ С€Р°РіРё РїРѕРёСЃРєР° РїР°СЂС‹ СЃРѕР±СЃС‚РІРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№
 delta_o= 5000;
 delta_t = 5000;
-%Точность поиска собственных значений
+%РўРѕС‡РЅРѕСЃС‚СЊ РїРѕРёСЃРєР° СЃРѕР±СЃС‚РІРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№
 e = 1e-3;
-%точность метода Рунге-Кутты 
+%С‚РѕС‡РЅРѕСЃС‚СЊ РјРµС‚РѕРґР° Р СѓРЅРіРµ-РљСѓС‚С‚С‹ 
 options_h_l = odeset('RelTol', 1e-8, 'AbsTol', 1e-10,'Refine', '8');
 options_A = odeset('RelTol', 1e-8, 'AbsTol', 1e-10, 'Refine', '8');
 options_W = odeset('RelTol', 1e-8, 'AbsTol', 1e-10,'Refine', '8');
 
 
 sqr_ro = 1/k2; %ro^2
-xi_3 = sqr_ro + thickness; %Толщина эллипса.
+xi_3 = sqr_ro + thickness; %РўРѕР»С‰РёРЅР° СЌР»Р»РёРїСЃР°.
 h_A = 1/n_A;
-h_A_1 = 1/(n_A);
-h_A_2 = (sqr_ro-1)/(2*n_A);
+h_A_1 = 1/(2*n_A);
+h_A_2 = (sqr_ro-1)/n_A;
 w=sqrt(w2);
 k=sqrt(k2);
 i_ = 1i;
-n_theta = n_A + 1;
-n_fi = 2*n_A + 1;
+n_theta = 2*n_A + 1;
+n_fi = n_A + 1;
 term_1 = zeros(n_theta, n_fi);
 term_2 = zeros(n_theta, n_fi);
 
@@ -61,13 +61,13 @@ for n = 0:N_Max
                 [h_1, l_1] = find_h_l(i1_1, i2_1,i3_1,w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l);
                 [Xi_1{q}, Xi_2{q}] = find_A(h_1, l_1, i1_1, i2_1, i3_1, w2, k2, w, k, m, n, options_A, h_A_1, h_A_2);
                 w_xi3(q) = RWEF_13(sqr_ro,w2,l_1,h_1,i3_1,ellipsoid_condition,h_A,xi_3,options_W);
-                Psi(q) = Xi_1{q}(n_theta) * Xi_2{q}(n_fi);
+                Psi(q) = Xi_1{q}(1) * Xi_2{q}(1);
             end
             if q == 2
                 [h_2, l_2] = find_h_l(i1_2, i2_2,i3_2,w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l);
                 [Xi_1{q}, Xi_2{q}] = find_A(h_2, l_2, i1_2, i2_2, i3_2, w2, k2, w, k, m, n, options_A, h_A_1, h_A_2);
                 w_xi3(q) = RWEF_13(sqr_ro,w2,l_2,h_2,i3_2,ellipsoid_condition,h_A,xi_3,options_W);
-                Psi(q) = Xi_1{q}(n_theta) * Xi_2{q}(n_fi);
+                Psi(q) = Xi_1{q}(1) * Xi_2{q}(1);
             end
        end
         
@@ -89,9 +89,9 @@ end
  
 
 X_1 = 0:1:n_theta-1;
-theta_ = (pi/2/(n_theta-1)*X_1);
+theta_ = (pi/(n_theta-1)*X_1);
 X_2 = 0:1:double(n_fi)-1;
-fi_ = (pi/double(n_fi-1)*X_2);
+fi_ = (pi/2/double(n_fi-1)*X_2);
 
 theta = repmat(theta_', 1, n_fi);
 fi = repmat(fi_, n_theta, 1);
@@ -103,10 +103,9 @@ Z = F .* cos(theta);
 figure
 hold on;
 
-surf(X, -Y, -Z);
-surf(X, Y, -Z);
-
 surf(X, -Y, Z);
+surf(-X, -Y, Z);
+surf(-X, Y, Z);
 surf(X, Y, Z);
 
 hold off;

@@ -1,10 +1,8 @@
-function res=RWEF_13(sqr_ro,sqr_w,l,h,tet_condition,ellips_condition,end_xi,options)
+function res=RWEF_13_v2(sqr_ro,sqr_w,l,h,tet_condition,ellips_condition,end_xi,options)
     ro=sqrt(sqr_ro);
     w=sqrt(sqr_w);
-    step = end_xi-ro^2;
     inf_xi=xi_infinity(l,h);
-    xi=(ro^2:step:inf_xi)';
-    %xi=[ro^2,end_xi,inf_xi]';
+    xi=[ro^2,end_xi,inf_xi]';
     X=set_x(xi,ro);
     n=length(X);
 

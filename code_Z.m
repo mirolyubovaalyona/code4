@@ -106,10 +106,10 @@ Z = F .* cos(theta);
 figure
 hold on;
 
-surf(X, Y, Z);
-surf(X, -Y, Z);
-surf(-X, Y, Z);
-surf(-X, -Y, Z);
+mesh(X, Y, Z);
+mesh(X, -Y, Z);
+mesh(-X, Y, Z);
+mesh(-X, -Y, Z);
 
 xlabel('x') 
 ylabel('y')

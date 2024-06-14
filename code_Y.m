@@ -63,13 +63,13 @@ for n = N_min:N_Max
             if q == 1
                 [h_1, l_1] = find_h_l(i1_1, i2_1,i3_1,w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l);
                 [Xi_1{q}, Xi_2{q}] = find_A(h_1, l_1, i1_1, i2_1, i3_1, w2, k2, w, k, m, n, options_A, h_A_1, h_A_2);
-                w_xi3(q) = RWEF_13(sqr_ro,w2,l_1,h_1,i3_1,ellipsoid_condition,xi_3,options_W);
+                w_xi3(q) = RWEF_13_v2(sqr_ro,w2,l_1,h_1,i3_1,ellipsoid_condition,xi_3,options_W);
                 Psi(q) = Xi_1{q}(1) * Xi_2{q}(n_fi);
             end
             if q == 2
                 [h_2, l_2] = find_h_l(i1_2, i2_2,i3_2,w2, k2, w, k, m, n, delta_o, delta_t, e, options_h_l);
                 [Xi_1{q}, Xi_2{q}] = find_A(h_2, l_2, i1_2, i2_2, i3_2, w2, k2, w, k, m, n, options_A, h_A_1, h_A_2);
-                w_xi3(q) = RWEF_13(sqr_ro,w2,l_2,h_2,i3_2,ellipsoid_condition,xi_3,options_W);
+                w_xi3(q) = RWEF_13_v2(sqr_ro,w2,l_2,h_2,i3_2,ellipsoid_condition,xi_3,options_W);
                 Psi(q) = Xi_1{q}(1) * Xi_2{q}(n_fi);
             end
        end
@@ -99,12 +99,12 @@ fi_ = (pi/2 + pi/double(n_fi-1)*X_2);
 theta = repmat(theta_', 1, n_fi);
 fi = repmat(fi_, n_theta, 1);
 
-X = F .* sin(theta) .* cos(fi);
+X= F .* sin(theta) .* cos(fi);
 Y = F .* sin(theta) .* sin(fi);
 Z = F .* cos(theta);
 
 figure
-hold off;
+hold on;
 
 mesh(X, Y, Z);
 mesh(-X, Y, Z);
@@ -116,8 +116,8 @@ ylabel('y')
 zlabel('z')
 title('Падение по Y')
 
-axis square;
 grid;
+axis square;
 hidden on;
 
 hold off;

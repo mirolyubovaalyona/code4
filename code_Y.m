@@ -19,9 +19,9 @@ ellipsoid_condition = 0; %0 - жЄсткий |1 - м€гкий
 N_min=0;
 M_min=0;
 
-N_Max = 1;
-M_Max = 1;
-n_A = 100; %кол-во шагов сетки  
+N_Max = 4;
+M_Max = 4;
+n_A = 200; %кол-во шагов сетки  
 
 % начальные шаги поиска пары собственных значений
 delta_o= 5000;
@@ -94,7 +94,7 @@ end
 X_1 = 0:1:n_theta-1;
 theta_ = (pi/2/(n_theta-1)*X_1);
 X_2 = 0:1:double(n_fi)-1;
-fi_ = (pi/double(n_fi-1)*X_2);
+fi_ = (pi/2 + pi/double(n_fi-1)*X_2);
 
 theta = repmat(theta_', 1, n_fi);
 fi = repmat(fi_, n_theta, 1);
@@ -104,17 +104,20 @@ Y = F .* sin(theta) .* sin(fi);
 Z = F .* cos(theta);
 
 figure
-hold on;
+hold off;
 
-
-surf(X, Y, Z);
-surf(-X, Y, Z);
-
-surf(X, Y, -Z);
-surf(-X, Y, -Z);
+mesh(X, Y, Z);
+mesh(-X, Y, Z);
+mesh(X, Y, -Z);
+mesh(-X, Y, -Z);
 
 xlabel('x') 
 ylabel('y')
 zlabel('z')
 title('ѕадение по Y')
+
+axis square;
+grid;
+hidden on;
+
 hold off;

@@ -19,8 +19,8 @@ ellipsoid_condition = 0; %0 - жЄсткий |1 - м€гкий
 N_min = 0;
 M_min = 0;
 
-N_Max = 2;
-M_Max = 2;
+N_Max = 4;
+M_Max = 4;
 n_A = 200; %кол-во шагов сетки  
 
 % начальные шаги поиска пары собственных значений
@@ -111,12 +111,14 @@ mesh(X, Y, Z);
 mesh(X, -Y, Z);
 mesh(X, -Y, -Z);
 
-hidden off % hidden off
 xlabel('x') 
 ylabel('y')
 zlabel('z')
 title('ѕадение по X')
-axis square
+
 grid;
+axis square;
+hidden on;
+
 hold off;
 

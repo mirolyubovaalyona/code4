@@ -8,7 +8,7 @@ i3_2=1;
 
 w2=10;
 
-ro2=2;
+ro2=1.1;
 k2=1/ro2;
 
 thickness =  1; %Толщина эллипса (xi_3 = sqr_ro + thickness) 
@@ -115,4 +115,9 @@ xlabel('x')
 ylabel('y')
 zlabel('z')
 title('Падение по Z')
+
+grid;
+axis square;
+hidden on;
+
 hold off;

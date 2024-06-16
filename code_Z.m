@@ -8,9 +8,9 @@ i1_2=0;
 i2_2=0;
 i3_2=1;
 
-w2=100;
+w2=10;
 
-ro2=2;
+ro2=1.1;
 k2=1/ro2;
 
 thickness =  0.1; %Толщина эллипса (xi_3 = sqr_ro + thickness) 
@@ -21,8 +21,8 @@ ellipsoid_condition = 1; %0 - жёсткий |1 - мягкий
 N_min = 0;
 M_min = 0;
 
-N_Max = 15;
-M_Max = 15;
+N_Max = 10;
+M_Max = 10;
 n_A = 200; %кол-во шагов сетки  
 
 % начальные шаги поиска пары собственных значений
@@ -127,5 +127,5 @@ hold off;
 elapsed_time = toc;
 disp(['Время выполнения программы: ' num2str(elapsed_time) ' секунд']);
 
-save('onZ_15')
+save('onZ_10')
 %size = sum(min((0:N_Max)', M_Max) + 1)

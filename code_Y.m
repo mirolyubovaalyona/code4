@@ -1,3 +1,5 @@
+tic
+
 i1_1=0;
 i2_1=0;
 i3_1=0;
@@ -19,8 +21,8 @@ ellipsoid_condition = 0; %0 - жЄсткий |1 - м€гкий
 N_min=0;
 M_min=0;
 
-N_Max = 4;
-M_Max = 4;
+N_Max = 10;
+M_Max = 10;
 n_A = 200; %кол-во шагов сетки  
 
 % начальные шаги поиска пары собственных значений
@@ -121,3 +123,9 @@ axis square;
 hidden on;
 
 hold off;
+
+elapsed_time = toc;
+disp(['¬рем€ выполнени€ программы: ' num2str(elapsed_time) ' секунд']);
+
+save('onY_')
+%size = sum(min((0:N_Max)', M_Max) + 1)
